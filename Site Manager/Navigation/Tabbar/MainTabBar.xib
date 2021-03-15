@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainTabBar" customModule="Site_Manager" customModuleProvider="target">
+            <connections>
+                <outlet property="calendarButton" destination="WR4-IE-Mij" id="yPR-Wk-UUY"/>
+                <outlet property="projectsButton" destination="F7Z-sZ-Fuu" id="1kg-uZ-lJD"/>
+                <outlet property="settingsButton" destination="CFr-Wm-hGc" id="6dt-Em-xSu"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="1223" height="310"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vJN-5j-qvg">
+                    <rect key="frame" x="0.0" y="44" width="407.5" height="232"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WR4-IE-Mij" customClass="TabBarButton" customModule="Site_Manager" customModuleProvider="target">
+                            <rect key="frame" x="173" y="96" width="62" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="ziB-XE-c5p"/>
+                            </constraints>
+                            <state key="normal" title="Calendar"/>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="WR4-IE-Mij" firstAttribute="centerX" secondItem="vJN-5j-qvg" secondAttribute="centerX" id="JNo-f6-4JM"/>
+                        <constraint firstItem="WR4-IE-Mij" firstAttribute="centerY" secondItem="vJN-5j-qvg" secondAttribute="centerY" id="jiI-hP-LbJ"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IC4-ll-XVX">
+                    <rect key="frame" x="407.5" y="44" width="408" height="232"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F7Z-sZ-Fuu" customClass="TabBarButton" customModule="Site_Manager" customModuleProvider="target">
+                            <rect key="frame" x="176" y="96" width="56" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="UZd-dp-QYg"/>
+                            </constraints>
+                            <state key="normal" title="Projects"/>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="F7Z-sZ-Fuu" firstAttribute="centerY" secondItem="IC4-ll-XVX" secondAttribute="centerY" id="Ewv-AF-fem"/>
+                        <constraint firstItem="F7Z-sZ-Fuu" firstAttribute="centerX" secondItem="IC4-ll-XVX" secondAttribute="centerX" id="o4w-bn-g2L"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Wr-lN-vgJ">
+                    <rect key="frame" x="815.5" y="44" width="407.5" height="232"/>
+                    <subviews>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CFr-Wm-hGc" customClass="TabBarButton" customModule="Site_Manager" customModuleProvider="target">
+                            <rect key="frame" x="175" y="96" width="57" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="aJP-uS-SID"/>
+                            </constraints>
+                            <state key="normal" title="Settings"/>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="CFr-Wm-hGc" firstAttribute="centerY" secondItem="6Wr-lN-vgJ" secondAttribute="centerY" id="bqd-Sm-48r"/>
+                        <constraint firstItem="CFr-Wm-hGc" firstAttribute="centerX" secondItem="6Wr-lN-vgJ" secondAttribute="centerX" id="sHC-A2-zG6"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="vJN-5j-qvg" secondAttribute="bottom" id="7dp-V3-BtZ"/>
+                <constraint firstItem="6Wr-lN-vgJ" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="8nu-8M-S0S"/>
+                <constraint firstItem="IC4-ll-XVX" firstAttribute="width" secondItem="vJN-5j-qvg" secondAttribute="width" id="Ikb-bg-w1I"/>
+                <constraint firstItem="IC4-ll-XVX" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="VtZ-ir-fZY"/>
+                <constraint firstItem="IC4-ll-XVX" firstAttribute="leading" secondItem="vJN-5j-qvg" secondAttribute="trailing" id="WVu-0H-yEc"/>
+                <constraint firstItem="6Wr-lN-vgJ" firstAttribute="width" secondItem="vJN-5j-qvg" secondAttribute="width" id="cMN-0c-Gw0"/>
+                <constraint firstItem="vJN-5j-qvg" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="haF-S2-dQH"/>
+                <constraint firstItem="6Wr-lN-vgJ" firstAttribute="leading" secondItem="IC4-ll-XVX" secondAttribute="trailing" id="iNn-Os-I3d"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="6Wr-lN-vgJ" secondAttribute="trailing" id="piF-35-4eR"/>
+                <constraint firstItem="vJN-5j-qvg" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="qEu-ma-XMh"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="6Wr-lN-vgJ" secondAttribute="bottom" id="sVK-S0-MFc"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="IC4-ll-XVX" secondAttribute="bottom" id="tLA-Az-OlQ"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="722.46376811594212" y="-91.071428571428569"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="166" id="Dpw-PD-cln" customClass="SiteInspectionNoteTableViewCell" customModule="Site_Manager" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="684" height="166"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Dpw-PD-cln" id="sTd-Ld-jz5">
+                <rect key="frame" x="0.0" y="0.0" width="684" height="166"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KUg-IF-15z">
+                        <rect key="frame" x="8" y="8" width="668" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="prY-af-QjU">
+                        <rect key="frame" x="8" y="37" width="668" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Note" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mR7-4O-hd1">
+                        <rect key="frame" x="8" y="95" width="668" height="63"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GNl-nf-96o">
+                        <rect key="frame" x="8" y="66" width="668" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Az-vC-eqm">
+                        <rect key="frame" x="644" y="8" width="32" height="30"/>
+                        <state key="normal" title="Hide"/>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hip-yO-jie">
+                        <rect key="frame" x="631" y="128" width="45" height="30"/>
+                        <state key="normal" title="Delete"/>
+                    </button>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="Hip-yO-jie" secondAttribute="bottom" constant="8" id="2qy-RP-m1y"/>
+                    <constraint firstAttribute="trailing" secondItem="KUg-IF-15z" secondAttribute="trailing" constant="8" id="6eX-W4-kqM"/>
+                    <constraint firstItem="prY-af-QjU" firstAttribute="top" secondItem="KUg-IF-15z" secondAttribute="bottom" constant="8" id="DNu-vR-Lph"/>
+                    <constraint firstAttribute="trailing" secondItem="7Az-vC-eqm" secondAttribute="trailing" constant="8" id="J9f-cE-xMl"/>
+                    <constraint firstAttribute="bottom" secondItem="mR7-4O-hd1" secondAttribute="bottom" constant="8" id="JoP-wK-vl8"/>
+                    <constraint firstItem="mR7-4O-hd1" firstAttribute="top" secondItem="GNl-nf-96o" secondAttribute="bottom" constant="8" id="MfV-ni-dqp"/>
+                    <constraint firstItem="GNl-nf-96o" firstAttribute="leading" secondItem="sTd-Ld-jz5" secondAttribute="leading" constant="8" id="Q2s-Hs-dQG"/>
+                    <constraint firstItem="prY-af-QjU" firstAttribute="leading" secondItem="sTd-Ld-jz5" secondAttribute="leading" constant="8" id="Uvw-44-dN7"/>
+                    <constraint firstAttribute="trailing" secondItem="Hip-yO-jie" secondAttribute="trailing" constant="8" id="XHG-W5-t9z"/>
+                    <constraint firstItem="mR7-4O-hd1" firstAttribute="leading" secondItem="sTd-Ld-jz5" secondAttribute="leading" constant="8" id="YbQ-bm-SiH"/>
+                    <constraint firstAttribute="trailing" secondItem="mR7-4O-hd1" secondAttribute="trailing" constant="8" id="gb9-Jy-gwN"/>
+                    <constraint firstAttribute="trailing" secondItem="GNl-nf-96o" secondAttribute="trailing" constant="8" id="m60-Ws-MMF"/>
+                    <constraint firstItem="GNl-nf-96o" firstAttribute="top" secondItem="prY-af-QjU" secondAttribute="bottom" constant="8" id="mN6-Yd-BKV"/>
+                    <constraint firstItem="KUg-IF-15z" firstAttribute="top" secondItem="sTd-Ld-jz5" secondAttribute="top" constant="8" id="qIF-S3-oJ7"/>
+                    <constraint firstItem="KUg-IF-15z" firstAttribute="leading" secondItem="sTd-Ld-jz5" secondAttribute="leading" constant="8" id="ssu-ft-Vcr"/>
+                    <constraint firstAttribute="trailing" secondItem="prY-af-QjU" secondAttribute="trailing" constant="8" id="tqM-C0-crd"/>
+                    <constraint firstItem="7Az-vC-eqm" firstAttribute="top" secondItem="sTd-Ld-jz5" secondAttribute="top" constant="8" id="umm-c2-DJD"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="deleteButton" destination="Hip-yO-jie" id="zca-jt-RNd"/>
+                <outlet property="descriptionLabel" destination="prY-af-QjU" id="uv9-v5-NRg"/>
+                <outlet property="hideButton" destination="7Az-vC-eqm" id="PH5-ju-HXO"/>
+                <outlet property="locationLabel" destination="GNl-nf-96o" id="sbD-Vd-04D"/>
+                <outlet property="noteLabel" destination="mR7-4O-hd1" id="gfC-F4-0BO"/>
+                <outlet property="titleLabel" destination="KUg-IF-15z" id="5qf-lP-0t8"/>
+            </connections>
+            <point key="canvasLocation" x="-166.66666666666669" y="56.25"/>
+        </tableViewCell>
+    </objects>
+</document>

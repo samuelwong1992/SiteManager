@@ -1,0 +1,55 @@
+//
+//  StoryboardConstants.swift
+//  Site Manager
+//
+//  Created by Samuel Wong on 4/2/21.
+//
+
+import UIKit
+
+struct StoryboardConstants {
+    enum Nib: String {
+        case MainTabBar = "MainTabBar"
+        case MainNavBar = "MainNavBar"
+        case ProjectTabBar = "ProjectTabBar"
+        
+        case CalendarCollectionViewCell = "CalendarCollectionViewCell"
+        case ImageCollectionViewCell = "ImageCollectionViewCell"
+        
+        case SiteInspectionTableViewCell = "SiteInspectionTableViewCell"
+        case SiteInspectionNoteTableViewCell = "SiteInspectionNoteTableViewCell"
+        case ProjectTableViewCell = "ProjectTableViewCell"
+        
+        var identifier: String {
+            return self.rawValue
+        }
+    }
+    
+    enum Storyboard: String {
+        case Calendar = "Calendar"
+        case Projects = "Projects"
+        case Settings = "Settings"
+        case Project = "Project"
+        case SiteInspection = "SiteInspection"
+        
+        var storyboard: UIStoryboard {
+            return UIStoryboard(name: self.rawValue, bundle: nil)
+        }
+    }
+    
+    enum ViewController: String {
+        case ProjectDrawings = "ProjectDrawings"
+        case InspectionReports = "InspectionReports"
+        case Photos = "Photos"
+        case ShopDrawings = "ShopDrawings"
+        
+        case SiteInspectionInitializationViewController = "SiteInspectionInitializationViewController"
+        case SiteInspectionNotesViewController = "SiteInspectionNotesViewController"
+        case SiteInspectionFinalizationViewController = "SiteInspectionFinalizationViewController"
+        
+        var identifier: String {
+            return self.rawValue
+        }
+    }
+}
+
