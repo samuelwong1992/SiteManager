@@ -84,8 +84,8 @@ extension MainTabBar {
 //MARK: Tab Bar Button Utility
 class TabBarButton: UIButton {
     enum TabBarButtonTypes: Int, CaseIterable {
-        case Calendar = 0
-        case Projects
+        case Projects = 0
+        case Calendar
         case Settings
         
         var title: String {

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -33,7 +33,7 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GNl-nf-96o">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Action By" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GNl-nf-96o">
                         <rect key="frame" x="8" y="66" width="668" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
@@ -69,10 +69,10 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="actionByLabel" destination="GNl-nf-96o" id="VEc-Ha-LtK"/>
                 <outlet property="deleteButton" destination="Hip-yO-jie" id="zca-jt-RNd"/>
                 <outlet property="descriptionLabel" destination="prY-af-QjU" id="uv9-v5-NRg"/>
                 <outlet property="hideButton" destination="7Az-vC-eqm" id="PH5-ju-HXO"/>
-                <outlet property="locationLabel" destination="GNl-nf-96o" id="sbD-Vd-04D"/>
                 <outlet property="noteLabel" destination="mR7-4O-hd1" id="gfC-F4-0BO"/>
                 <outlet property="titleLabel" destination="KUg-IF-15z" id="5qf-lP-0t8"/>
             </connections>

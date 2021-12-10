@@ -19,6 +19,7 @@ struct StoryboardConstants {
         case SiteInspectionTableViewCell = "SiteInspectionTableViewCell"
         case SiteInspectionNoteTableViewCell = "SiteInspectionNoteTableViewCell"
         case ProjectTableViewCell = "ProjectTableViewCell"
+        case NewSiteInspectionTableViewCell = "NewSiteInspectionTableViewCell"
         
         var identifier: String {
             return self.rawValue
@@ -30,7 +31,7 @@ struct StoryboardConstants {
         case Projects = "Projects"
         case Settings = "Settings"
         case Project = "Project"
-        case SiteInspection = "SiteInspection"
+        case SiteInspectionStoryboard = "SiteInspection"
         
         var storyboard: UIStoryboard {
             return UIStoryboard(name: self.rawValue, bundle: nil)
@@ -40,12 +41,12 @@ struct StoryboardConstants {
     enum ViewController: String {
         case ProjectDrawings = "ProjectDrawings"
         case InspectionReports = "InspectionReports"
-        case Photos = "Photos"
-        case ShopDrawings = "ShopDrawings"
         
         case SiteInspectionInitializationViewController = "SiteInspectionInitializationViewController"
         case SiteInspectionNotesViewController = "SiteInspectionNotesViewController"
         case SiteInspectionFinalizationViewController = "SiteInspectionFinalizationViewController"
+        
+        case NewProjectViewController = "NewProjectViewController"
         
         var identifier: String {
             return self.rawValue

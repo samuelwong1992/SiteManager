@@ -27,12 +27,12 @@ class SiteInspectionTableViewCell: UITableViewCell {
     
     var siteInspection: SiteInspection! {
         didSet {
-            titleLabel.text = siteInspection.project.name
-            locationLabel.text = siteInspection.project.location
-            timeLabel.text = siteInspection.date.timeDayMonthYearReadableString 
-            colourIndicatorView.backgroundColor = siteInspection.project.color.uiColor
-            
-            completedIndicator.backgroundColor = siteInspection.completed ? .green : .clear
+            titleLabel.text = siteInspection.name
+            locationLabel.text = siteInspection.workInProgress
+            if let date = siteInspection.date {
+                timeLabel.text = date.timeDayMonthYearReadableString
+            }
+            colourIndicatorView.backgroundColor =  UIColor.colourWithHexString(siteInspection.project?.color ?? "ffffff")
         }
     }
     

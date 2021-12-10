@@ -116,12 +116,19 @@ class ProjectTabBarButton: UIButton {
             }
         }
         
-        var viewController: ProjectBaseViewController {
+        var viewController: ProjectBaseViewController? {
             switch self {
-            case .ProjectDrawings : return StoryboardConstants.Storyboard.Project.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.ProjectDrawings.identifier)
+            case .ProjectDrawings : return DrawingsViewController.viewController
             case .InspectionReports : return StoryboardConstants.Storyboard.Project.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.InspectionReports.identifier)
-            case .Photos : return StoryboardConstants.Storyboard.Project.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.ProjectDrawings.identifier) // StoryboardConstants.Storyboard.Project.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.Photos.identifier)
-            case .ShopDrawings : return StoryboardConstants.Storyboard.Project.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.ProjectDrawings.identifier) // StoryboardConstants.Storyboard.Project.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.ShopDrawings.identifier)
+            case .Photos :
+                let vc = DrawingsViewController.viewController
+                vc?.isForAttachment = true
+                return vc
+            case .ShopDrawings :
+                let vc = DrawingsViewController.viewController
+                vc?.isForAttachment = true
+                vc?.isForShopDrawing = true
+                return vc
             }
         }
     }

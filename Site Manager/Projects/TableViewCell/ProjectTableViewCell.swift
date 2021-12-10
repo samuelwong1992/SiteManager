@@ -22,7 +22,7 @@ class ProjectTableViewCell: UITableViewCell {
         didSet {
             nameLabel.text = project.name
             locationLabel.text = project.location
-            colourIndicator.backgroundColor = project.color.uiColor
+            colourIndicator.backgroundColor = UIColor.colourWithHexString(project.color ?? "ffffff")
         }
     }
     

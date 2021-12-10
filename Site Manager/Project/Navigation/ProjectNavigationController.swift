@@ -17,6 +17,6 @@ class ProjectNavigationController: MainNavigationController {
     override func initialize() {
         super.initialize()
         
-        self.setTitle(title: project.name)
+        self.setTitle(title: project.name ?? "")
     }
 }

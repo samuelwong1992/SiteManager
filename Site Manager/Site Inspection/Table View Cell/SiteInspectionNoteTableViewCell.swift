@@ -23,7 +23,7 @@ class SiteInspectionNoteTableViewCell: UITableViewCell {
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var actionByLabel: UILabel!
     @IBOutlet weak var noteLabel: UILabel!
     
     @IBOutlet weak var hideButton: UIButton!
@@ -34,8 +34,8 @@ class SiteInspectionNoteTableViewCell: UITableViewCell {
     var siteInspectionObject: SiteInspectionObject! {
         didSet {
             titleLabel.text = String.selfOrNA(siteInspectionObject.text)
-            descriptionLabel.text = String.selfOrNA(siteInspectionObject.description)
-            locationLabel.text = "{\(siteInspectionObject.coordinates.first!.midPointTo(point: siteInspectionObject.coordinates.last!).x), \(siteInspectionObject.coordinates.first!.midPointTo(point: siteInspectionObject.coordinates.last!).y)}"
+            descriptionLabel.text = String.selfOrNA(siteInspectionObject.information)
+            actionByLabel.text = "Action By: " + String.selfOrNA(siteInspectionObject.actionBy)
             noteLabel.text = String.selfOrNA(siteInspectionObject.notes)
         }
     }
@@ -46,6 +46,8 @@ class SiteInspectionNoteTableViewCell: UITableViewCell {
         
         hideButton.addTarget(self, action: #selector(hideButton_didPress), for: .touchUpInside)
         deleteButton.addTarget(self, action: #selector(deleteButton_didPress), for: .touchUpInside)
+        
+        self.selectionStyle = .none
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

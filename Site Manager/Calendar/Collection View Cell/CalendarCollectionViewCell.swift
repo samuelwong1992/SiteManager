@@ -82,7 +82,7 @@ extension CalendarCollectionViewCell {
                 indicator.text = "+"
                 indicator.addBorder(colour: .black)
             } else {
-                indicator.backgroundColor = siteInspections[index].project.color.uiColor
+                indicator.backgroundColor = UIColor.colourWithHexString(siteInspections[index].project?.color ?? "ffffff")
                 indicator.text = "\(index + 1)"
             }
             

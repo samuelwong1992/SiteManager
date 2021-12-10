@@ -16,14 +16,25 @@ class SiteInspectionViewController: UIViewController {
     @IBOutlet weak var lineButton: UIButton!
     @IBOutlet weak var squareButton: UIButton!
     @IBOutlet weak var selectButton: UIButton!
+    @IBOutlet weak var freeFormButton: UIButton!
+    @IBOutlet weak var colourButton: UIButton!
     
     @IBOutlet weak var imageViewHeightConstraint: NSLayoutConstraint!
     
     @IBOutlet weak var tableView: UITableView!
     
+    var selectedColour: UIColor = .blue
+    
+    var siteInpsection: SiteInspection! {
+        get {
+            return (self.navigationController as! SiteInspectionNavigationController).siteInspection
+        }
+    }
+    
     var drawingImageViews: [UIImageView] = []
     var startTouch: CGPoint?
     var endTouch: CGPoint?
+    var freeFormPoints: [CGPoint] = []
     var currentContext : CGContext?
     var tempImageStore: UIImage!
     var originalImage: UIImage!
@@ -31,13 +42,12 @@ class SiteInspectionViewController: UIViewController {
     var siteInspectionObjectTuples: [(inspectionObject: SiteInspectionObject, attachedView: UIView?, imageView: UIImageView)] = []
     var selectedSiteObjectTuple: (inspectionObject: SiteInspectionObject, attachedView: UIView?, imageView: UIImageView)?
     var selectedCorner: Int?
-    
-    var siteImage = UIImage(named: "test_plan.jpg")
-    
+        
     enum InspectModes {
         case Scroll
         case Line
         case Square
+        case FreeForm
         case Select
         
         var inspectionObjectType: SiteInspectionObject.SiteInspectionObjectType? {
@@ -45,6 +55,7 @@ class SiteInspectionViewController: UIViewController {
             case .Scroll : return nil
             case .Line : return .Line
             case .Square : return .Square
+            case .FreeForm : return .FreeForm
             case .Select : return nil
             }
         }
@@ -55,6 +66,7 @@ class SiteInspectionViewController: UIViewController {
             scrollButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             lineButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             squareButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+            freeFormButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             selectButton.titleLabel?.font = UIFont.systemFont(ofSize: 16)
             
             
@@ -62,6 +74,7 @@ class SiteInspectionViewController: UIViewController {
             case .Scroll : scrollButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
             case .Line : lineButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
             case .Square : squareButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+            case .FreeForm : freeFormButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
             case .Select : selectButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
             }
         }
@@ -71,6 +84,52 @@ class SiteInspectionViewController: UIViewController {
         super.viewDidLoad()
 
         initialize()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        self.view.performTotalLayout()
+        
+        for siteInspectionObject in siteInpsection.siteInspectionObjectsArray {
+            let drawingImageView = UIImageView(frame: self.imageView.bounds.withZeroOrigin)
+            drawingImageView.isUserInteractionEnabled = true
+            self.imageView.addSubview(drawingImageView)
+            drawingImageViews.append(drawingImageView)
+                
+            addSiteInspectionObject(forDrawing: true, siteInspectionObject: siteInspectionObject, onImageView: drawingImageView)
+        }
+    }
+    
+    func addSiteInspectionObject(forDrawing draw: Bool, siteInspectionObject: SiteInspectionObject, onImageView imageView: UIImageView) {
+        var labelContainer: UIView?
+                    
+        if siteInspectionObject.textXCoord != 0 && siteInspectionObject.textYCoord != 0 {
+            labelContainer = UIView(frame: CGRect(origin: CGPoint(x: siteInspectionObject.textXCoord, y: siteInspectionObject.textYCoord), size: CGSize(width: siteInspectionObject.textWidth, height: siteInspectionObject.textHeight)))
+            let label = UILabel(frame: CGRect(origin: CGPoint(x: siteInspectionObject.textXCoord, y: siteInspectionObject.textYCoord), size: CGSize(width: siteInspectionObject.textWidth, height: siteInspectionObject.textHeight)))
+            labelContainer!.backgroundColor = .white
+            labelContainer!.addBorder(colour: siteInspectionObject.uiColor.withAlphaComponent(0.3))
+            labelContainer!.isUserInteractionEnabled = true
+            label.numberOfLines = 0
+            let string = NSMutableAttributedString(string: siteInspectionObject.text ?? "", attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 20)])
+            if !String.isNilOrEmpty(siteInspectionObject.notes) {
+                string.append(NSMutableAttributedString(string: "\n" + siteInspectionObject.notes!, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16)]))
+            }
+            label.attributedText = string
+            label.adjustsFontSizeToFitWidth = true
+            label.minimumScaleFactor = 0.1
+            labelContainer!.addSubView(subview: label, toTop: true, marginTop: 4, toBottom: true, marginBottom: -4, toRightEdge: true, marginRight: -4, toLeftEdge: true, marginLeft: 4)
+            imageView.addSubview(labelContainer!)
+        }
+        
+        let inspectionObject = (inspectionObject: siteInspectionObject, attachedView: labelContainer, imageView: imageView)
+        self.siteInspectionObjectTuples.append(inspectionObject)
+
+        if draw {
+            drawFromScratch(siteInspectionObject: inspectionObject)
+        }
+                
+        tableView.reloadData()
     }
 }
 
@@ -90,12 +149,15 @@ extension SiteInspectionViewController {
         imageView.isUserInteractionEnabled = true
         imageView.isMultipleTouchEnabled = true
         imageView.backgroundColor = .red
+        imageView.image = siteInpsection.drawing?.image
         imageViewHeightConstraint.constant = (imageView.image!.size.height*imageView.frame.size.width)/imageView.image!.size.width
         
         scrollButton.addTarget(self, action: #selector(inspectModeButton_didPress(sender:)), for: .touchUpInside)
         lineButton.addTarget(self, action: #selector(inspectModeButton_didPress(sender:)), for: .touchUpInside)
         squareButton.addTarget(self, action: #selector(inspectModeButton_didPress(sender:)), for: .touchUpInside)
         selectButton.addTarget(self, action: #selector(inspectModeButton_didPress(sender:)), for: .touchUpInside)
+        freeFormButton.addTarget(self, action: #selector(inspectModeButton_didPress(sender:)), for: .touchUpInside)
+        colourButton.addTarget(self, action: #selector(colourButton_didPress), for: .touchUpInside)
     }
 }
 
@@ -104,8 +166,6 @@ extension SiteInspectionViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return imageView
     }
-    
-    
 }
 
 //MARK: Button Handlers
@@ -115,11 +175,25 @@ extension SiteInspectionViewController: UIScrollViewDelegate {
         case scrollButton : currentInspectMode = .Scroll
         case lineButton : currentInspectMode = .Line
         case squareButton : currentInspectMode = .Square
+        case freeFormButton : currentInspectMode = .FreeForm
         case selectButton : currentInspectMode = .Select
         default : break
         }
         
         scrollView.isUserInteractionEnabled = currentInspectMode == .Scroll
+    }
+    
+    func colourButton_didPress() {
+        let vc = UIColorPickerViewController()
+        vc.delegate = self
+        self.present(vc, animated: true, completion: nil)
+    }
+}
+
+//MARK: Colour Picker Delegate
+extension SiteInspectionViewController: UIColorPickerViewControllerDelegate {
+    func colorPickerViewController(_ viewController: UIColorPickerViewController, didSelect color: UIColor, continuously: Bool) {
+        self.selectedColour = color
     }
 }
 
@@ -127,15 +201,17 @@ extension SiteInspectionViewController: UIScrollViewDelegate {
 extension SiteInspectionViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         switch currentInspectMode {
-        case .Line, .Square :
+        case .Line, .Square, .FreeForm :
             if let touch = touches.first {
-                let drawingImageView = UIImageView(frame: self.imageView.bounds.withZeroOrigin)
-                drawingImageView.isUserInteractionEnabled = true
-                self.imageView.addSubview(drawingImageView)
-                drawingImageViews.append(drawingImageView)
-                startTouch = CGPoint(x: ((touch.location(in: imageView).x*imageView.image!.size.width)/imageView.frame.size.width)*scrollView.zoomScale, y: ((touch.location(in: imageView).y*imageView.image!.size.height)/imageView.frame.size.height)*scrollView.zoomScale)
-                tempImageStore = imageView.image
-                originalImage = imageView.image
+                if self.freeFormPoints.isEmpty {
+                    let drawingImageView = UIImageView(frame: self.imageView.bounds.withZeroOrigin)
+                    drawingImageView.isUserInteractionEnabled = true
+                    self.imageView.addSubview(drawingImageView)
+                    drawingImageViews.append(drawingImageView)
+                    startTouch = CGPoint(x: ((touch.location(in: imageView).x*imageView.image!.size.width)/imageView.frame.size.width)*scrollView.zoomScale, y: ((touch.location(in: imageView).y*imageView.image!.size.height)/imageView.frame.size.height)*scrollView.zoomScale)
+                    tempImageStore = imageView.image
+                    originalImage = imageView.image
+                }
             }
             
         case .Select :
@@ -149,16 +225,16 @@ extension SiteInspectionViewController {
                             self.drawFromScratch(siteInspectionObject: siteObjectTuple)
                             self.selectedSiteObjectTuple = siteObjectTuple
                             
-                            if touch.location(in: attachedView).x < attachedView.frame.size.width / 10 {
-                                if touch.location(in: attachedView).y < attachedView.frame.size.height / 10 {
+                            if touch.location(in: attachedView).x < attachedView.frame.size.width / 7 {
+                                if touch.location(in: attachedView).y < attachedView.frame.size.height / 7 {
                                     selectedCorner = 0
-                                } else if touch.location(in: attachedView).y > 9*attachedView.frame.size.height / 10 {
+                                } else if touch.location(in: attachedView).y > 6*attachedView.frame.size.height / 7 {
                                     selectedCorner = 3
                                 }
-                            } else if touch.location(in: attachedView).x > 9*attachedView.frame.size.width / 10 {
-                                if touch.location(in: attachedView).y < attachedView.frame.size.height / 10 {
+                            } else if touch.location(in: attachedView).x > 6*attachedView.frame.size.width / 7 {
+                                if touch.location(in: attachedView).y < attachedView.frame.size.height / 7 {
                                     selectedCorner = 1
-                                } else if touch.location(in: attachedView).y > 9*attachedView.frame.size.height / 10 {
+                                } else if touch.location(in: attachedView).y > 6*attachedView.frame.size.height / 7 {
                                     selectedCorner = 2
                                 }
                             }
@@ -190,7 +266,7 @@ extension SiteInspectionViewController {
                 bezier.addLine(to: endTouch!)
                 bezier.close()
 
-                UIColor.blue.set()
+                selectedColour.set()
 
                 self.currentContext?.setLineWidth(4)
                 self.currentContext?.addPath(bezier.cgPath)
@@ -219,7 +295,7 @@ extension SiteInspectionViewController {
                 bezier.close()
                 bezier.fill()
 
-                UIColor.blue.withAlphaComponent(0.2).set()
+                selectedColour.withAlphaComponent(0.2).set()
 
                 self.currentContext?.setLineWidth(4)
                 self.currentContext?.addPath(bezier.cgPath)
@@ -257,7 +333,7 @@ extension SiteInspectionViewController {
                     bezier.addLine(to: selectedSiteObjectTuple!.inspectionObject.coordinates.first!.midPointTo(point: selectedSiteObjectTuple!.inspectionObject.coordinates.last!))
                     bezier.close()
 
-                    UIColor.blue.set()
+                    selectedSiteObjectTuple?.inspectionObject.uiColor.set()
 
                     self.currentContext?.setLineWidth(4)
                     self.currentContext?.addPath(bezier.cgPath)
@@ -273,72 +349,137 @@ extension SiteInspectionViewController {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         switch self.currentInspectMode {
         case .Line, .Square:
-            UIGraphicsEndImageContext()
-            self.currentContext = nil
+            finishDrawing(coords: [self.startTouch!, self.endTouch!], lastTouch: touches.first!.location(in: self.imageView))
             
-            let alert = UIAlertController(title: "Add Note", message: "Do you want to keep this marker?", preferredStyle: .alert)
-            
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
-                self.drawingImageViews.last!.removeFromSuperview()
-            }))
-            alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (action) in
-                let siteInspectionObject = SiteInspectionObject()
-                siteInspectionObject.id = self.siteInspectionObjectTuples.count
-                siteInspectionObject.coordinates = [self.startTouch!, self.endTouch!]
-                siteInspectionObject.siteInspectionObjectType = self.currentInspectMode.inspectionObjectType
-                
-                self.siteInspectionObjectTuples.append((siteInspectionObject, nil, self.drawingImageViews.last!))
-                self.tableView.reloadData()
-            }))
-            alert.addAction(UIAlertAction(title: "Add with notes", style: .default, handler: { (action) in
-                if let vc = SiteInspectionNotesViewController.viewController {
-                    vc.inspectionTitle = "Item \(self.siteInspectionObjectTuples.count + 1)"
-                    vc.returnBlock = { (title, description, note, actionBy) -> Void in
-                        self.navigationController?.dismiss(animated: true, completion: nil)
-                                                
-                        let siteInspectionObject = SiteInspectionObject()
-                        siteInspectionObject.id = self.siteInspectionObjectTuples.count
-                        siteInspectionObject.coordinates = [self.startTouch!, self.endTouch!]
-                        siteInspectionObject.siteInspectionObjectType = self.currentInspectMode.inspectionObjectType
-                        siteInspectionObject.text = title
-                        siteInspectionObject.description = description
-                        siteInspectionObject.notes = note
-                        siteInspectionObject.textCoordinates = [self.startTouch!]
-                        
-                        var label: UILabel?
-                        if let touch = touches.first {
-                            label = UILabel(frame: CGRect(origin: touch.location(in: self.imageView), size: CGSize(width: ((10*self.imageView.image!.size.width)/self.imageView.frame.size.width)*self.scrollView.zoomScale, height: ((7*self.imageView.image!.size.height)/self.imageView.frame.size.height)*self.scrollView.zoomScale)))
-                            label!.backgroundColor = .white
-                            label!.addBorder(colour: UIColor.blue.withAlphaComponent(0.3))
-                            label!.numberOfLines = 0
-                            let string = NSMutableAttributedString(string: title, attributes: [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 12)])
-                            string.append(NSMutableAttributedString(string: "\n \(description)", attributes: [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 12)]))
-                            label!.attributedText = string
-                            label!.adjustsFontSizeToFitWidth = true
-                            label!.minimumScaleFactor = 0.1
-                            label!.isUserInteractionEnabled = true
-                            self.drawingImageViews.last!.addSubview(label!)
-                            
-                            self.drawLineBetweenPoints(startPoint: self.startTouch!.midPointTo(point: self.endTouch!), endPoint: label!.frame.midpoint.translatedToProportionalArea(size1: self.imageView.image!.size, size2: self.imageView.frame.size, zoomScale: self.scrollView.zoomScale), inImageView: self.drawingImageViews.last!)
-                        }
-                        
-                        self.siteInspectionObjectTuples.append((siteInspectionObject, label, self.drawingImageViews.last!))
-                        self.tableView.reloadData()
-                    }
-                    self.navigationController?.present(vc, animated: true, completion: nil)
+        case .FreeForm :
+            if let touch = touches.first {
+                endTouch = CGPoint(x: ((touch.location(in: imageView).x*imageView.image!.size.width)/imageView.frame.size.width)*scrollView.zoomScale, y: ((touch.location(in: imageView).y*imageView.image!.size.height)/imageView.frame.size.height)*scrollView.zoomScale)
+                freeFormPoints.append(endTouch!)
+                if self.currentContext == nil {
+                    UIGraphicsBeginImageContext(imageView.image!.size)
+                    self.currentContext = UIGraphicsGetCurrentContext()
+                } else {
+                    self.currentContext?.clear(CGRect(x: 0, y: 0, width: imageView.image!.size.width, height: imageView.image!.size.height))
                 }
-            }))
-            
-            self.present(alert, animated: true, completion: nil)
-            
+
+                let bezier = UIBezierPath()
+
+                bezier.move(to: startTouch!)
+                
+                for point in freeFormPoints {
+                    bezier.addLine(to: point)
+                }
+                
+                if freeFormPoints.count > 1 {
+                    if let firstTouch = freeFormPoints.first {
+                        if let lastTouch = freeFormPoints.last {
+                            if (Int(abs(Double(firstTouch.x - lastTouch.x))) < 50) && (Int(abs(Double(firstTouch.y - lastTouch.y))) < 50) {
+                                bezier.close()
+                                bezier.fill()
+                            }
+                        }
+                    }
+                } else {
+                    let circlePath = UIBezierPath(arcCenter: startTouch!, radius: 30, startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
+                    selectedColour.setFill()
+                    circlePath.fill()
+                    self.currentContext?.addPath(circlePath.cgPath)
+                }
+
+                selectedColour.withAlphaComponent(0.2).set()
+
+                self.currentContext?.setLineWidth(4)
+                self.currentContext?.addPath(bezier.cgPath)
+                self.currentContext?.strokePath()
+                let img2 = self.currentContext?.makeImage()
+                drawingImageViews.last!.image = UIImage.init(cgImage: img2!)
+                
+                if freeFormPoints.count > 1 {
+                    if let firstTouch = freeFormPoints.first {
+                        if let lastTouch = freeFormPoints.last {
+                            if (Int(abs(Double(firstTouch.x - lastTouch.x))) < 50) && (Int(abs(Double(firstTouch.y - lastTouch.y))) < 50) {
+                                finishDrawing(coords: self.freeFormPoints, lastTouch: touches.first!.location(in: self.imageView))
+                                self.freeFormPoints = []
+                            }
+                        }
+                    }
+                }
+            }
         case .Select :
             UIGraphicsEndImageContext()
+            if let selectedSiteObjectTuple = selectedSiteObjectTuple {
+                if let attachedView = selectedSiteObjectTuple.attachedView {
+                    SiteInspectionObjectHelpers.updateSiteInspectionObject(siteInspectionObject: selectedSiteObjectTuple.inspectionObject, textLocation: attachedView.frame)
+                }
+            }
+            
             self.currentContext = nil
             selectedCorner = nil
             selectedSiteObjectTuple = nil
         default:
             break
         }
+    }
+    
+    func finishDrawing(coords: [CGPoint], lastTouch: CGPoint) {
+        UIGraphicsEndImageContext()
+        self.currentContext = nil
+        
+        let alert = UIAlertController(title: "Add Note", message: "Do you want to keep this marker?", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+            self.drawingImageViews.last!.removeFromSuperview()
+        }))
+        alert.addAction(UIAlertAction(title: "Add", style: .default, handler: { (action) in
+            let siteInspectionObjectContainer = SiteInspectionObjectHelpers.createSiteInspectionObject(forSiteInspection: self.siteInpsection, siObjectType: self.currentInspectMode.inspectionObjectType!, colour: self.selectedColour.hexCode, coords: coords)
+        
+            if let error = siteInspectionObjectContainer.error {
+                UIAlertController.showAlertWithError(viewController: self, error: error)
+            } else if let siteInspectionObject = siteInspectionObjectContainer.siteInspectionObject {
+                self.siteInspectionObjectTuples.append((siteInspectionObject, nil, self.drawingImageViews.last!))
+                self.tableView.reloadData()
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Add With Notes", style: .default, handler: { (action) in
+            if let vc = SiteInspectionNotesViewController.viewController {
+                vc.project = self.siteInpsection.project
+                vc.inspectionTitle = "Item \(self.siteInspectionObjectTuples.count + 1)"
+                vc.returnBlock = { (title, description, note, actionBy, attachments) -> Void in
+                    self.navigationController?.dismiss(animated: true, completion: nil)
+                                 
+                    let siteInspectionObjectContainer = SiteInspectionObjectHelpers.createSiteInspectionObject(forSiteInspection: self.siteInpsection, siObjectType: self.currentInspectMode.inspectionObjectType!, colour: self.selectedColour.hexCode, coords: coords, text: title, information: description, notes: note, actionBy: actionBy, textXCoord: lastTouch.x, textYCoord: lastTouch.y, textHeight: ((7*self.imageView.image!.size.height)/self.imageView.frame.size.height)*self.scrollView.zoomScale, textWidth: ((10*self.imageView.image!.size.width)/self.imageView.frame.size.width)*self.scrollView.zoomScale, attachments: attachments)
+                    
+                    if let error = siteInspectionObjectContainer.error {
+                        UIAlertController.showAlertWithError(viewController: self, error: error)
+                    } else if let siteInspectionObject = siteInspectionObjectContainer.siteInspectionObject {
+                        self.addSiteInspectionObject(forDrawing: false, siteInspectionObject: siteInspectionObject, onImageView: self.drawingImageViews.last!)
+                    }
+                }
+                self.navigationController?.present(vc, animated: true, completion: nil)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Add Related To Other Marker", style: .default, handler: { action in
+            let alert = UIAlertController(title: "Related To", message: "Which Marker is this Marker tied to?", preferredStyle: .alert)
+            
+            for sio in self.siteInpsection.siteInspectionObjectsArray {
+                if sio.link == nil {
+                    alert.addAction(UIAlertAction(title: sio.text, style: .default, handler: { action in
+                        let siteInspectionObjectContainer = SiteInspectionObjectHelpers.createSiteInspectionObject(forSiteInspection: self.siteInpsection, withLinkToSiteInspecionObject: sio, siObjectType: self.currentInspectMode.inspectionObjectType!, colour: self.selectedColour.hexCode, coords: coords)
+                        
+                        if let error = siteInspectionObjectContainer.error {
+                            UIAlertController.showAlertWithError(viewController: self, error: error)
+                        } else if let siteInspectionObject = siteInspectionObjectContainer.siteInspectionObject {
+                            self.siteInspectionObjectTuples.append((siteInspectionObject, nil, self.drawingImageViews.last!))
+                            self.tableView.reloadData()
+                        }
+                    }))
+                }
+            }
+            
+            self.present(alert, animated: true, completion: nil)
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }
 
@@ -348,22 +489,27 @@ extension SiteInspectionViewController {
         siteInspectionObject.imageView.image = UIImage()
         switch siteInspectionObject.inspectionObject.siteInspectionObjectType {
         case .Line :
-            drawLineBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!, endPoint: siteInspectionObject.inspectionObject.coordinates.last!, inImageView: siteInspectionObject.imageView)
+            drawLineBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!, endPoint: siteInspectionObject.inspectionObject.coordinates.last!, inImageView: siteInspectionObject.imageView, color: siteInspectionObject.inspectionObject.uiColor)
             tempImageStore = siteInspectionObject.imageView.image
             if let attachedView = siteInspectionObject.attachedView {
-                drawLineBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!.midPointTo(point: siteInspectionObject.inspectionObject.coordinates.last!), endPoint: attachedView.frame.midpoint.translatedToProportionalArea(size1: self.imageView.image!.size, size2: self.imageView.frame.size, zoomScale: scrollView.zoomScale), inImageView: siteInspectionObject.imageView)
+                drawLineBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!.midPointTo(point: siteInspectionObject.inspectionObject.coordinates.last!), endPoint: attachedView.frame.midpoint.translatedToProportionalArea(size1: self.imageView.image!.size, size2: self.imageView.frame.size, zoomScale: scrollView.zoomScale), inImageView: siteInspectionObject.imageView, color: siteInspectionObject.inspectionObject.uiColor)
             }
         case .Square :
-            drawSquareBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!, endPoint: siteInspectionObject.inspectionObject.coordinates.last!, inImageView: siteInspectionObject.imageView)
+            drawSquareBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!, endPoint: siteInspectionObject.inspectionObject.coordinates.last!, inImageView: siteInspectionObject.imageView, color: siteInspectionObject.inspectionObject.uiColor)
             tempImageStore = siteInspectionObject.imageView.image
             if let attachedView = siteInspectionObject.attachedView {
-                drawLineBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!.midPointTo(point: siteInspectionObject.inspectionObject.coordinates.last!), endPoint: attachedView.frame.midpoint.translatedToProportionalArea(size1: self.imageView.image!.size, size2: self.imageView.frame.size, zoomScale: scrollView.zoomScale), inImageView: siteInspectionObject.imageView)
+                drawLineBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!.midPointTo(point: siteInspectionObject.inspectionObject.coordinates.last!), endPoint: attachedView.frame.midpoint.translatedToProportionalArea(size1: self.imageView.image!.size, size2: self.imageView.frame.size, zoomScale: scrollView.zoomScale), inImageView: siteInspectionObject.imageView, color: siteInspectionObject.inspectionObject.uiColor)
             }
-        default : break
+        case .FreeForm :
+            drawFreeFormWithPoints(points: siteInspectionObject.inspectionObject.coordinates, inImageView: siteInspectionObject.imageView, color: siteInspectionObject.inspectionObject.uiColor)
+            tempImageStore = siteInspectionObject.imageView.image
+            if let attachedView = siteInspectionObject.attachedView {
+                drawLineBetweenPoints(startPoint: siteInspectionObject.inspectionObject.coordinates.first!.midPointTo(point: siteInspectionObject.inspectionObject.coordinates.last!), endPoint: attachedView.frame.midpoint.translatedToProportionalArea(size1: self.imageView.image!.size, size2: self.imageView.frame.size, zoomScale: scrollView.zoomScale), inImageView: siteInspectionObject.imageView, color: siteInspectionObject.inspectionObject.uiColor)
+            }
         }
     }
     
-    func drawLineBetweenPoints(startPoint: CGPoint, endPoint: CGPoint, inImageView imageView: UIImageView) {
+    func drawLineBetweenPoints(startPoint: CGPoint, endPoint: CGPoint, inImageView imageView: UIImageView, color: UIColor) {
         UIGraphicsBeginImageContext(self.imageView.image!.size)
         let context = UIGraphicsGetCurrentContext()
         
@@ -374,7 +520,7 @@ extension SiteInspectionViewController {
         bezier.addLine(to: endPoint)
         bezier.close()
 
-        UIColor.blue.set()
+        color.set()
 
         context?.setLineWidth(4)
         context?.addPath(bezier.cgPath)
@@ -384,7 +530,7 @@ extension SiteInspectionViewController {
         UIGraphicsEndImageContext()
     }
     
-    func drawSquareBetweenPoints(startPoint: CGPoint, endPoint: CGPoint, inImageView imageView: UIImageView) {
+    func drawSquareBetweenPoints(startPoint: CGPoint, endPoint: CGPoint, inImageView imageView: UIImageView, color: UIColor) {
         UIGraphicsBeginImageContext(self.imageView.image!.size)
         let context = UIGraphicsGetCurrentContext()
         
@@ -392,7 +538,7 @@ extension SiteInspectionViewController {
         
         let bezier = UIBezierPath()
 
-        UIColor.blue.withAlphaComponent(0.2).set()
+        color.withAlphaComponent(0.2).set()
         
         bezier.move(to: startPoint)
         bezier.addLine(to: CGPoint(x: endPoint.x, y: startPoint.y))
@@ -408,18 +554,60 @@ extension SiteInspectionViewController {
         imageView.image = UIImage.init(cgImage: img2!)
         UIGraphicsEndImageContext()
     }
+    
+    func drawFreeFormWithPoints(points: [CGPoint], inImageView imageView: UIImageView, color: UIColor) {
+        guard points.count > 0 else { return }
+        UIGraphicsBeginImageContext(self.imageView.image!.size)
+        let context = UIGraphicsGetCurrentContext()
+        
+        imageView.image!.draw(in: CGRect(origin: CGPoint.zero, size: self.imageView.image!.size))
+        
+        let bezier = UIBezierPath()
+
+        color.withAlphaComponent(0.2).set()
+        
+        bezier.move(to: points.first!)
+        for point in points {
+            bezier.addLine(to: point)
+        }
+        bezier.close()
+        bezier.fill()
+
+        context?.setLineWidth(4)
+        context?.addPath(bezier.cgPath)
+        context?.strokePath()
+        let img2 = context?.makeImage()
+        imageView.image = UIImage.init(cgImage: img2!)
+        UIGraphicsEndImageContext()
+    }
+    
+    func rotate(path: UIBezierPath, degree: CGFloat) {
+        let bounds: CGRect = path.cgPath.boundingBox
+        let center = CGPoint(x: bounds.midX, y: bounds.midY)
+
+        let radians = degree / 180.0 * .pi
+        var transform: CGAffineTransform = .identity
+        transform = transform.translatedBy(x: center.x, y: center.y)
+        transform = transform.rotated(by: radians)
+        transform = transform.translatedBy(x: -center.x, y: -center.y)
+        path.apply(transform)
+    }
 }
 
 extension SiteInspectionViewController: UITableViewDelegate, UITableViewDataSource {
+    func siteInspectionObjectsWithNoLink() -> [(inspectionObject: SiteInspectionObject, attachedView: UIView?, imageView: UIImageView)] {
+        return siteInspectionObjectTuples.filter({ $0.inspectionObject.link == nil })
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return siteInspectionObjectTuples.count
+        return siteInspectionObjectsWithNoLink().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SiteInspectionNoteTableViewCell.kReuseIdentifier) as! SiteInspectionNoteTableViewCell
         
-        cell.siteInspectionObject = siteInspectionObjectTuples[indexPath.row].inspectionObject
-        if(siteInspectionObjectTuples[indexPath.row].imageView.isHidden) {
+        cell.siteInspectionObject = siteInspectionObjectsWithNoLink()[indexPath.row].inspectionObject
+        if(siteInspectionObjectsWithNoLink()[indexPath.row].imageView.isHidden) {
             cell.hideButton.setTitle("Show", for: .normal)
         } else {
             cell.hideButton.setTitle("Hide", for: .normal)
@@ -432,21 +620,42 @@ extension SiteInspectionViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let vc = SiteInspectionNotesViewController.viewController {
+            vc.siteInspectionObject = siteInspectionObjectsWithNoLink()[indexPath.row].inspectionObject
+            self.present(vc, animated: true, completion: nil)
+        }
+    }
 }
 
 extension SiteInspectionViewController: SiteInspectionNoteTableViewCellDelegate {
     func siteInspectionNoteTableViewCell(siteInspectionNoteTableViewCell: SiteInspectionNoteTableViewCell, didPressHideForSiteInspectionObject siteInspectionObject: SiteInspectionObject) {
         for sio in siteInspectionObjectTuples.filter({ $0.inspectionObject.id == siteInspectionObject.id}) {
             sio.imageView.isHidden = !sio.imageView.isHidden
+            
+            for linkedSIO in sio.inspectionObject.linkedSiteInspectionObjectsArray {
+                for sio in siteInspectionObjectTuples.filter({ $0.inspectionObject.id == linkedSIO.id}) {
+                    sio.imageView.isHidden = !sio.imageView.isHidden
+                }
+            }
         }
         self.tableView.reloadData()
     }
     
     func siteInspectionNoteTableViewCell(siteInspectionNoteTableViewCell: SiteInspectionNoteTableViewCell, didPressDeleteForSiteInspectionObject siteInspectionObject: SiteInspectionObject) {
-        for sio in siteInspectionObjectTuples.filter({ $0.inspectionObject.id == siteInspectionObject.id}) {
-            sio.imageView.removeFromSuperview()
-        }
-        siteInspectionObjectTuples.removeAll(where: { $0.inspectionObject.id == siteInspectionObject.id})
-        self.tableView.reloadData()
+        let alert = UIAlertController(title: "Are you sure?", message: "Are you sure you want to delete this note?", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Delete", style: .default, handler: { action in
+            for sio in self.siteInspectionObjectTuples.filter({ $0.inspectionObject.id == siteInspectionObject.id}) {
+                sio.imageView.removeFromSuperview()
+                sio.inspectionObject.delete()
+            }
+            self.siteInspectionObjectTuples.removeAll(where: { $0.inspectionObject.id == siteInspectionObject.id})
+            self.tableView.reloadData()
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
     }
 }

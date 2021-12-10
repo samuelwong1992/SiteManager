@@ -17,7 +17,7 @@ class SiteInspectionFinalizationViewController: UIViewController {
     var siteInspection: SiteInspection!
     
     static var viewController: SiteInspectionFinalizationViewController? {
-        return StoryboardConstants.Storyboard.SiteInspection.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.SiteInspectionFinalizationViewController.identifier) as? SiteInspectionFinalizationViewController
+        return StoryboardConstants.Storyboard.SiteInspectionStoryboard.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.SiteInspectionFinalizationViewController.identifier) as? SiteInspectionFinalizationViewController
     }
 
     override func viewDidLoad() {
@@ -44,10 +44,6 @@ extension SiteInspectionFinalizationViewController {
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Generate Later", style: .default, handler: { (action) in
-            if let siteInspection = self.siteInspection {
-                siteInspection.completed = true
-            }
-            
             if let navigationController = self.presentingViewController as? SiteInspectionNavigationController {
                 navigationController.presentingViewController?.dismiss(animated: true, completion: {
                     navigationController._delegate?.didClose(forMainNavigationController: navigationController)
@@ -55,10 +51,6 @@ extension SiteInspectionFinalizationViewController {
             }
         }))
         alert.addAction(UIAlertAction(title: "Generate Now", style: .default, handler: { (action) in
-            if let siteInspection = self.siteInspection {
-                siteInspection.completed = true
-            }
-            
             if let navigationController = self.presentingViewController as? SiteInspectionNavigationController {
                 navigationController.presentingViewController?.dismiss(animated: true, completion: {
                     navigationController._delegate?.didClose(forMainNavigationController: navigationController)

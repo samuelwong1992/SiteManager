@@ -16,6 +16,10 @@ class CalendarViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     
+    var siteInspections: [SiteInspection] {
+        return SiteInspectionHelpers.siteInspections
+    }
+    
     var inspectionMonth: Int = Date().month {
         didSet {
             if inspectionMonth > 12 {
@@ -137,7 +141,7 @@ extension CalendarViewController: UICollectionViewDelegate, UICollectionViewData
     
     func getSiteInspectionsFromIndexPath(indexPath: IndexPath) -> [SiteInspection] {
         let date = getDateFromIndexPath(indexPath: indexPath)
-        return User.currentUser.siteInspections.filter({ date.standardizedDate().compare($0.date.standardizedDate()) == .orderedSame }).sorted(by: { $0.date.compare($1.date) == .orderedAscending})
+        return siteInspections.filter({ date.standardizedDate().compare($0.date!.standardizedDate()) == .orderedSame }).sorted(by: { $0.date!.compare($1.date!) == .orderedAscending})
     }
 }
 
@@ -161,13 +165,13 @@ extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func getSelectedDatesSiteInspections() -> [SiteInspection] {
-        return User.currentUser.siteInspections.filter({ selectedDate.standardizedDate().compare($0.date.standardizedDate()) == .orderedSame }).sorted(by: { $0.date.compare($1.date) == .orderedAscending})
+        return siteInspections.filter({ selectedDate.standardizedDate().compare($0.date!.standardizedDate()) == .orderedSame }).sorted(by: { $0.date!.compare($1.date!) == .orderedAscending})
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let vc = SiteInspectionInitializationViewController.viewController {
-            vc.siteInspection = getSelectedDatesSiteInspections()[indexPath.row]
-            self.present(vc, animated: true, completion: nil)
-        }
+//        if let vc = SiteInspectionInitializationViewController.viewController {
+//            vc.siteInspection = getSelectedDatesSiteInspections()[indexPath.row]
+//            self.present(vc, animated: true, completion: nil)
+//        }
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 
 class SiteInspectionNavigationController: MainNavigationController {
     static var navigationController: SiteInspectionNavigationController? {
-        return StoryboardConstants.Storyboard.SiteInspection.storyboard.instantiateInitialViewController() as? SiteInspectionNavigationController
+        return StoryboardConstants.Storyboard.SiteInspectionStoryboard.storyboard.instantiateInitialViewController() as? SiteInspectionNavigationController
     }
     
     var siteInspection: SiteInspection!

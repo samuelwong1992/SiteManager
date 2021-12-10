@@ -40,11 +40,12 @@ extension ProjectTabBarController {
         _viewControllers = []
         
         for tabBarButton in ProjectTabBarButton.TabBarButtonTypes.allCases {
-            let vc = tabBarButton.viewController
-            if let navController = self.navigationController as? ProjectNavigationController {
-                vc.project = navController.project
+            if let vc = tabBarButton.viewController {
+                if let navController = self.navigationController as? ProjectNavigationController {
+                    vc.project = navController.project
+                }
+                _viewControllers.append(vc)
             }
-            _viewControllers.append(vc)
         }
         
         self.viewControllers = _viewControllers

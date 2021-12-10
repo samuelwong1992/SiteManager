@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19461" systemVersion="20G165" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Attachment" representedClassName=".Attachment" syncable="YES">
+        <attribute name="data" optional="YES" attributeType="Binary"/>
+        <attribute name="isPhoto" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="attachments" inverseEntity="Project"/>
+        <relationship name="siteInspectionObject" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SiteInspectionObject" inverseName="attachments" inverseEntity="SiteInspectionObject"/>
+    </entity>
+    <entity name="Drawings" representedClassName=".Drawings" syncable="YES">
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="drawings" inverseEntity="Project"/>
+        <relationship name="siteInspection" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SiteInspection" inverseName="drawing" inverseEntity="SiteInspection"/>
+    </entity>
+    <entity name="Project" representedClassName=".Project" syncable="YES">
+        <attribute name="color" optional="YES" attributeType="String"/>
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="attachments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Attachment" inverseName="project" inverseEntity="Attachment"/>
+        <relationship name="drawings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Drawings" inverseName="project" inverseEntity="Drawings"/>
+        <relationship name="siteInspections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SiteInspection" inverseName="project" inverseEntity="SiteInspection"/>
+    </entity>
+    <entity name="SiteInspection" representedClassName=".SiteInspection" syncable="YES">
+        <attribute name="attention" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="introduction" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="presentOnSite" optional="YES" attributeType="String"/>
+        <attribute name="subject" optional="YES" attributeType="String"/>
+        <attribute name="weatherConditions" optional="YES" attributeType="String"/>
+        <attribute name="whs" optional="YES" attributeType="String"/>
+        <attribute name="workInProgress" optional="YES" attributeType="String"/>
+        <relationship name="drawing" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Drawings" inverseName="siteInspection" inverseEntity="Drawings"/>
+        <relationship name="project" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="siteInspections" inverseEntity="Project"/>
+        <relationship name="siteInspectionObjects" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SiteInspectionObject" inverseName="siteInspection" inverseEntity="SiteInspectionObject"/>
+    </entity>
+    <entity name="SiteInspectionObject" representedClassName=".SiteInspectionObject" syncable="YES">
+        <attribute name="actionBy" optional="YES" attributeType="String"/>
+        <attribute name="colour" optional="YES" attributeType="String"/>
+        <attribute name="information" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="siObjectType" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="text" optional="YES" attributeType="String"/>
+        <attribute name="textHeight" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="textWidth" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="textXCoord" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="textYCoord" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="attachments" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Attachment" inverseName="siteInspectionObject" inverseEntity="Attachment"/>
+        <relationship name="coords" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SiteInspectionObjectCoordinate" inverseName="siteInspectionObject" inverseEntity="SiteInspectionObjectCoordinate"/>
+        <relationship name="link" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SiteInspectionObject" inverseName="linkedObjects" inverseEntity="SiteInspectionObject"/>
+        <relationship name="linkedObjects" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SiteInspectionObject" inverseName="link" inverseEntity="SiteInspectionObject"/>
+        <relationship name="siteInspection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SiteInspection" inverseName="siteInspectionObjects" inverseEntity="SiteInspection"/>
+    </entity>
+    <entity name="SiteInspectionObjectCoordinate" representedClassName=".SiteInspectionObjectCoordinate" syncable="YES">
+        <attribute name="index" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="x" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="y" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <relationship name="siteInspectionObject" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SiteInspectionObject" inverseName="coords" inverseEntity="SiteInspectionObject"/>
+    </entity>
+    <elements>
+        <element name="Drawings" positionX="-45" positionY="81" width="128" height="74"/>
+        <element name="Project" positionX="-63" positionY="-18" width="128" height="119"/>
+        <element name="SiteInspection" positionX="-54" positionY="-18" width="128" height="209"/>
+        <element name="SiteInspectionObject" positionX="-36" positionY="90" width="128" height="254"/>
+        <element name="Attachment" positionX="-45" positionY="144" width="128" height="89"/>
+        <element name="SiteInspectionObjectCoordinate" positionX="-36" positionY="153" width="128" height="89"/>
+    </elements>
+</model>

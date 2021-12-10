@@ -46,7 +46,8 @@ extension UIView {
             subview.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             subview.topAnchor.constraint(equalTo: self.topAnchor),
             subview.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            subview.widthAnchor.constraint(equalTo: self.widthAnchor)
+            subview.widthAnchor.constraint(equalTo: self.widthAnchor),
+            subview.heightAnchor.constraint(equalTo: self.heightAnchor)
             ])
     }
     
