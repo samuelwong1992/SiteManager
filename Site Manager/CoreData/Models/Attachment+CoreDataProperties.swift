@@ -2,7 +2,7 @@
 //  Attachment+CoreDataProperties.swift
 //  Site Manager
 //
-//  Created by Samuel Wong on 10/12/21.
+//  Created by Samuel Wong on 10/2/2022.
 //
 //
 
@@ -16,7 +16,7 @@ extension Attachment {
         return NSFetchRequest<Attachment>(entityName: "Attachment")
     }
 
-    @NSManaged public var data: Data?
+    @NSManaged public var path: String?
     @NSManaged public var isPhoto: Bool
     @NSManaged public var project: Project?
     @NSManaged public var siteInspectionObject: SiteInspectionObject?

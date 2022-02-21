@@ -2,7 +2,7 @@
 //  Project+CoreDataProperties.swift
 //  Site Manager
 //
-//  Created by Samuel Wong on 10/12/21.
+//  Created by Samuel Wong on 11/2/2022.
 //
 //
 
@@ -19,9 +19,27 @@ extension Project {
     @NSManaged public var color: String?
     @NSManaged public var location: String?
     @NSManaged public var name: String?
+    @NSManaged public var number: String?
+    @NSManaged public var attachments: NSSet?
     @NSManaged public var drawings: NSSet?
     @NSManaged public var siteInspections: NSSet?
-    @NSManaged public var attachments: NSSet?
+
+}
+
+// MARK: Generated accessors for attachments
+extension Project {
+
+    @objc(addAttachmentsObject:)
+    @NSManaged public func addToAttachments(_ value: Attachment)
+
+    @objc(removeAttachmentsObject:)
+    @NSManaged public func removeFromAttachments(_ value: Attachment)
+
+    @objc(addAttachments:)
+    @NSManaged public func addToAttachments(_ values: NSSet)
+
+    @objc(removeAttachments:)
+    @NSManaged public func removeFromAttachments(_ values: NSSet)
 
 }
 
@@ -56,23 +74,6 @@ extension Project {
 
     @objc(removeSiteInspections:)
     @NSManaged public func removeFromSiteInspections(_ values: NSSet)
-
-}
-
-// MARK: Generated accessors for attachments
-extension Project {
-
-    @objc(addAttachmentsObject:)
-    @NSManaged public func addToAttachments(_ value: Attachment)
-
-    @objc(removeAttachmentsObject:)
-    @NSManaged public func removeFromAttachments(_ value: Attachment)
-
-    @objc(addAttachments:)
-    @NSManaged public func addToAttachments(_ values: NSSet)
-
-    @objc(removeAttachments:)
-    @NSManaged public func removeFromAttachments(_ values: NSSet)
 
 }
 

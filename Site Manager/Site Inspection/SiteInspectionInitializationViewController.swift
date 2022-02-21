@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import PhotosUI
 
 class SiteInspectionInitializationViewController: UIViewController {
 
@@ -15,16 +16,23 @@ class SiteInspectionInitializationViewController: UIViewController {
     
     @IBOutlet weak var reportNameTextField: UITextField!
     @IBOutlet weak var introductionTextField: UITextField!
-    @IBOutlet weak var presentOnSiteTextField: UITextField!
-    @IBOutlet weak var weatherTextField: UITextField!
+    @IBOutlet weak var companyTextField: UITextField!
     @IBOutlet weak var workTextField: UITextField!
     @IBOutlet weak var attentionTextField: UITextField!
     @IBOutlet weak var subjectTextField: UITextField!
+    
+    @IBOutlet weak var addIntroPhotoButton: UIButton!
     
     @IBOutlet weak var beginButton: UIButton!
     
     var siteInspection: SiteInspection!
     var project: Project!
+    
+    var introPhoto: UIImage? {
+        didSet {
+            addIntroPhotoButton.setTitle(introPhoto == nil ? "Add" : "Change", for: .normal)
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +49,14 @@ extension SiteInspectionInitializationViewController {
         if let siteInspection = self.siteInspection {
             reportNameTextField.text = siteInspection.name
             introductionTextField.text = siteInspection.introduction
-            presentOnSiteTextField.text = siteInspection.presentOnSite
-            weatherTextField.text = siteInspection.weatherConditions
             workTextField.text = siteInspection.workInProgress
             attentionTextField.text = siteInspection.attention
             subjectTextField.text = siteInspection.subject
+            
+            introPhoto = siteInspection.introductionPhoto
         }
         
-        
+        addIntroPhotoButton.addTarget(self, action: #selector(addIntroPhotoButton_didPress), for: .touchUpInside)
         beginButton.addTarget(self, action: #selector(beginButton_didPress), for: .touchUpInside)
     }
 }
@@ -60,8 +68,6 @@ extension SiteInspectionInitializationViewController {
         if siteInspection != nil {
             siteInspection!.name = reportNameTextField.text ?? ""
             siteInspection!.introduction = introductionTextField.text ?? ""
-            siteInspection!.presentOnSite = presentOnSiteTextField.text ?? ""
-            siteInspection!.weatherConditions = weatherTextField.text ?? ""
             siteInspection!.workInProgress = workTextField.text ?? ""
             siteInspection!.attention = attentionTextField.text ?? ""
             siteInspection!.subject = subjectTextField.text ?? ""
@@ -80,13 +86,40 @@ extension SiteInspectionInitializationViewController {
             }
         }
     }
+    
+    func addIntroPhotoButton_didPress() {
+        let alert = UIAlertController(title: "Add Photo", message: "Add from albumn or take photo now?", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Albumn", style: .default, handler: { _ in
+            self.openImagePicker()
+        }))
+        alert.addAction(UIAlertAction(title: "Take Photo", style: .default, handler: { _ in
+            let vc = UIImagePickerController()
+            vc.sourceType = .camera
+            vc.delegate = self
+            self.present(vc, animated: true, completion: nil)
+        }))
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func openImagePicker() {
+        var config = PHPickerConfiguration()
+        config.filter = .images
+        config.selectionLimit = 1
+        
+        let vc = PHPickerViewController(configuration: config)
+        vc.delegate = self
+        self.present(vc, animated: true, completion: nil)
+    }
 }
 
 extension SiteInspectionInitializationViewController: DrawingsViewControllerDelegate {
     func drawingsViewController(drawingsViewController: DrawingsViewController, didSelectAttachment attachment: Attachment) {}
     
     func drawingsViewController(drawingsViewController: DrawingsViewController, didSelectDrawing drawing: Drawings) {
-        let siteInspectionResponse = SiteInspectionHelpers.createSiteInspection(withName: reportNameTextField.text ?? "", withDrawing: drawing, forProject: project, introduction: introductionTextField.text ?? "", presentOnSite: presentOnSiteTextField.text ?? "", weatherConditions: weatherTextField.text ?? "", workInProgress: workTextField.text ?? "", attention: attentionTextField.text ?? "", subject: subjectTextField.text ?? "")
+        let siteInspectionResponse = SiteInspectionHelpers.createSiteInspection(withName: reportNameTextField.text ?? "", withDrawing: drawing, forProject: project, company: companyTextField.text ?? "", introduction: introductionTextField.text ?? "", introductionPhoto: introPhoto, workInProgress: workTextField.text ?? "", attention: attentionTextField.text ?? "", subject: subjectTextField.text ?? "")
         if let error = siteInspectionResponse.error {
             UIAlertController.showAlertWithError(viewController: self, error: error)
         } else if let siteInspection = siteInspectionResponse.siteInspection {
@@ -104,6 +137,32 @@ extension SiteInspectionInitializationViewController: DrawingsViewControllerDele
 
 extension SiteInspectionInitializationViewController: MainNavigationControllerDelegate {
     func didClose(forMainNavigationController mainNavigationController: MainNavigationController) {
+        self.dismiss(animated: true, completion: nil)
+    }
+}
+
+//MARK: Camera Picker Delegate
+extension SiteInspectionInitializationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[.originalImage] as? UIImage else { return }
+        
+        self.introPhoto = image
+        self.dismiss(animated: true, completion: nil)
+    }
+}
+
+//MARK: PH Picker Delegate
+extension SiteInspectionInitializationViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        for result in results {
+            result.itemProvider.loadObject(ofClass: UIImage.self, completionHandler: { (object, error) in
+                DispatchQueue.main.async {
+                    if let image = object as? UIImage {
+                        self.introPhoto = image
+                    }
+                }
+            })
+        }
         self.dismiss(animated: true, completion: nil)
     }
 }

@@ -18,6 +18,7 @@ class NewProjectViewController: UIViewController {
     }
 
     @IBOutlet weak var nameInputField: StandardInputField!
+    @IBOutlet weak var projectNumberInputField: StandardInputField!
     @IBOutlet weak var locationInputField: StandardInputField!
     
     @IBOutlet weak var colorPickerIndicator: UIView!
@@ -57,10 +58,11 @@ extension NewProjectViewController {
     
     func addButton_didPress() {
         guard nameInputField.hasText else { UIAlertController.showAlertWithError(viewController: self, errorString: "Name Input Field is required"); return }
+        guard projectNumberInputField.hasText else { UIAlertController.showAlertWithError(viewController: self, errorString: "Project Number Input Field is required"); return }
         guard locationInputField.hasText else { UIAlertController.showAlertWithError(viewController: self, errorString: "Location Input Field is required"); return }
         guard colorPickerIndicator.backgroundColor != nil else { UIAlertController.showAlertWithError(viewController: self, errorString: "A Project Colour is required"); return }
         
-        let projectContainer = ProjectHelpers.createProject(withName: nameInputField.text!, location: locationInputField.text!, color: colorPickerIndicator.backgroundColor!.hexCode)
+        let projectContainer = ProjectHelpers.createProject(withName: nameInputField.text!, number: projectNumberInputField.text!, location: locationInputField.text!, color: colorPickerIndicator.backgroundColor!.hexCode)
         if let error = projectContainer.error {
             UIAlertController.showAlertWithError(viewController: self, error: error)
         } else if let project = projectContainer.project {

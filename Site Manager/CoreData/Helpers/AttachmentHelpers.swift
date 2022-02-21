@@ -11,21 +11,26 @@ import UIKit
 class AttachmentHelpers {
     static func createAttachment(forProject project: Project, fromImage image: UIImage, isPhoto: Bool) {
         let attachment = Attachment(context: CoreDataHelper.context)
-        attachment.data = image.pngData()
-        attachment.isPhoto = isPhoto
-        
-        do {
-            project.addToAttachments(attachment)
-            try CoreDataHelper.context.save()
-        } catch {
-            print(error)
+        if let filePath = image.saveImageToFileManager() {
+            attachment.path = filePath
+            attachment.isPhoto = isPhoto
+            
+            do {
+                project.addToAttachments(attachment)
+                try CoreDataHelper.context.save()
+            } catch {
+                print(error)
+            }
         }
     }
 }
 
 extension Attachment {
-    var image: UIImage {
-        return UIImage(data: self.data! )!
+    var image: UIImage? {
+        if let path = self.path {
+            return UIImage.loadImageFromDiskWith(fileName: path)
+        }
+        return nil
     }
     
     func delete() {

@@ -16,6 +16,8 @@ class SiteInspectionFinalizationViewController: UIViewController {
     
     var siteInspection: SiteInspection!
     
+    var siteInspectionImages: [UIImage?]!
+    
     static var viewController: SiteInspectionFinalizationViewController? {
         return StoryboardConstants.Storyboard.SiteInspectionStoryboard.storyboard.instantiateViewController(identifier: StoryboardConstants.ViewController.SiteInspectionFinalizationViewController.identifier) as? SiteInspectionFinalizationViewController
     }
@@ -51,10 +53,17 @@ extension SiteInspectionFinalizationViewController {
             }
         }))
         alert.addAction(UIAlertAction(title: "Generate Now", style: .default, handler: { (action) in
-            if let navigationController = self.presentingViewController as? SiteInspectionNavigationController {
-                navigationController.presentingViewController?.dismiss(animated: true, completion: {
-                    navigationController._delegate?.didClose(forMainNavigationController: navigationController)
-                })
+            var documentInteractionController: UIDocumentInteractionController!
+            
+            let data = SiteInspectionPDFGenerator.createPDF(siteInspection: self.siteInspection, withSiteInspectionDrawings: self.siteInspectionImages)
+            let destURL = FileManager.default.temporaryDirectory.appendingPathComponent("tempFile.pdf")
+            do {
+                try data.write(to: destURL)
+                documentInteractionController = UIDocumentInteractionController.init(url: destURL)
+                documentInteractionController?.delegate = self
+                documentInteractionController?.presentPreview(animated: true)
+            } catch {
+                print(error)
             }
         }))
         
@@ -63,5 +72,11 @@ extension SiteInspectionFinalizationViewController {
     
     func segmentedControl_didChange() {
         whsTextField.isEnabled = segmentedControl.selectedSegmentIndex != 0
+    }
+}
+
+extension SiteInspectionFinalizationViewController: UIDocumentInteractionControllerDelegate {
+    func documentInteractionControllerViewControllerForPreview(_ controller: UIDocumentInteractionController) -> UIViewController {
+        return self
     }
 }

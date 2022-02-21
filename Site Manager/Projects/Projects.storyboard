@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oml-lV-Qfx">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oml-lV-Qfx">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -68,13 +68,13 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xym-3M-vxX">
-                                <rect key="frame" x="16" y="145" width="382" height="21"/>
+                                <rect key="frame" x="16" y="238" width="382" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1st-ca-eBG" customClass="StandardInputField" customModule="Site_Manager" customModuleProvider="target">
-                                <rect key="frame" x="16" y="174" width="382" height="40"/>
+                                <rect key="frame" x="16" y="267" width="382" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="Civ-dZ-Jwe"/>
                                 </constraints>
@@ -82,7 +82,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
                             </textField>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YLJ-V0-jW1">
-                                <rect key="frame" x="16" y="234" width="40" height="40"/>
+                                <rect key="frame" x="16" y="327" width="40" height="40"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="MI6-I5-FBg"/>
@@ -90,7 +90,7 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WWX-KE-3qn" customClass="SecondaryButton" customModule="Site_Manager" customModuleProvider="target">
-                                <rect key="frame" x="72" y="234" width="326" height="40"/>
+                                <rect key="frame" x="72" y="327" width="326" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="p35-YF-yz5"/>
                                 </constraints>
@@ -104,16 +104,35 @@
                                     <constraint firstAttribute="height" constant="40" id="NhH-q3-z8j"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="string" keyPath="titleText" value="Hello"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="titleText" value="Add"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Project Number" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C9c-SJ-EnT">
+                                <rect key="frame" x="16" y="145" width="382" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aHZ-SN-fFO" customClass="StandardInputField" customModule="Site_Manager" customModuleProvider="target">
+                                <rect key="frame" x="16" y="174" width="382" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="Qjs-fO-Bdt"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                            </textField>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="nFs-DK-HZq"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="nFs-DK-HZq" firstAttribute="trailing" secondItem="C9c-SJ-EnT" secondAttribute="trailing" constant="16" id="0hY-Bn-cPf"/>
+                            <constraint firstItem="Xym-3M-vxX" firstAttribute="top" secondItem="aHZ-SN-fFO" secondAttribute="bottom" constant="24" id="0tK-25-fT0"/>
                             <constraint firstItem="YLJ-V0-jW1" firstAttribute="leading" secondItem="nFs-DK-HZq" secondAttribute="leading" constant="16" id="1ld-5r-fLG"/>
+                            <constraint firstItem="aHZ-SN-fFO" firstAttribute="top" secondItem="C9c-SJ-EnT" secondAttribute="bottom" constant="8" id="2RZ-cV-wRk"/>
                             <constraint firstItem="WWX-KE-3qn" firstAttribute="top" secondItem="1st-ca-eBG" secondAttribute="bottom" constant="20" id="7np-xl-VKU"/>
                             <constraint firstItem="766-8s-oIO" firstAttribute="top" secondItem="nFs-DK-HZq" secondAttribute="top" constant="8" id="BBZ-Qq-hhF"/>
+                            <constraint firstItem="C9c-SJ-EnT" firstAttribute="top" secondItem="6XD-Bu-daW" secondAttribute="bottom" constant="24" id="DAl-zD-whH"/>
+                            <constraint firstItem="C9c-SJ-EnT" firstAttribute="leading" secondItem="nFs-DK-HZq" secondAttribute="leading" constant="16" id="DFC-JG-d5P"/>
                             <constraint firstItem="WWX-KE-3qn" firstAttribute="leading" secondItem="YLJ-V0-jW1" secondAttribute="trailing" constant="16" id="ECa-BP-rzU"/>
                             <constraint firstItem="nFs-DK-HZq" firstAttribute="trailing" secondItem="Xym-3M-vxX" secondAttribute="trailing" constant="16" id="Eqr-hT-wlD"/>
                             <constraint firstItem="766-8s-oIO" firstAttribute="leading" secondItem="nFs-DK-HZq" secondAttribute="leading" constant="16" id="Hcm-Rd-ITQ"/>
@@ -128,7 +147,8 @@
                             <constraint firstItem="Xym-3M-vxX" firstAttribute="leading" secondItem="nFs-DK-HZq" secondAttribute="leading" constant="16" id="nWM-25-Rc5"/>
                             <constraint firstItem="1st-ca-eBG" firstAttribute="leading" secondItem="nFs-DK-HZq" secondAttribute="leading" constant="16" id="nnb-zP-QdQ"/>
                             <constraint firstItem="nFs-DK-HZq" firstAttribute="trailing" secondItem="rLl-r0-xES" secondAttribute="trailing" constant="16" id="qJk-bq-ljj"/>
-                            <constraint firstItem="Xym-3M-vxX" firstAttribute="top" secondItem="6XD-Bu-daW" secondAttribute="bottom" constant="24" id="sZ2-xo-Qch"/>
+                            <constraint firstItem="aHZ-SN-fFO" firstAttribute="leading" secondItem="nFs-DK-HZq" secondAttribute="leading" constant="16" id="rYQ-RU-TWa"/>
+                            <constraint firstItem="nFs-DK-HZq" firstAttribute="trailing" secondItem="aHZ-SN-fFO" secondAttribute="trailing" constant="16" id="sv3-oA-wlr"/>
                             <constraint firstItem="nFs-DK-HZq" firstAttribute="trailing" secondItem="766-8s-oIO" secondAttribute="trailing" constant="16" id="uKM-RS-Dkj"/>
                             <constraint firstItem="nFs-DK-HZq" firstAttribute="bottom" secondItem="rLl-r0-xES" secondAttribute="bottom" constant="16" id="wmU-0K-pwM"/>
                         </constraints>
@@ -139,6 +159,7 @@
                         <outlet property="colourButton" destination="WWX-KE-3qn" id="85e-hN-uUg"/>
                         <outlet property="locationInputField" destination="1st-ca-eBG" id="Tvu-ff-Iel"/>
                         <outlet property="nameInputField" destination="6XD-Bu-daW" id="PUo-ma-goB"/>
+                        <outlet property="projectNumberInputField" destination="aHZ-SN-fFO" id="9H2-kt-oYv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mte-9R-GTc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -21,11 +21,12 @@ class ProjectHelpers {
     }
     
     @discardableResult
-    static func createProject(withName name: String, location: String, color: String) -> (project: Project?, error: Error?) {
+    static func createProject(withName name: String, number: String, location: String, color: String) -> (project: Project?, error: Error?) {
         let project = Project(context: CoreDataHelper.context)
         project.name = name
         project.location = location
         project.color = color
+        project.number = number
         do {
             try CoreDataHelper.context.save()
             return (project, nil)

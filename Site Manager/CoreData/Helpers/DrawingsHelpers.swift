@@ -11,19 +11,24 @@ import UIKit
 class DrawingsHelpers {
     static func createDrawing(forProject project: Project, fromImage image: UIImage) {
         let drawing = Drawings(context: CoreDataHelper.context)
-        drawing.data = image.pngData()
-        
-        do {
-            project.addToDrawings(drawing)
-            try CoreDataHelper.context.save()
-        } catch {
-            print(error)
+        if let path = image.saveImageToFileManager() {
+            drawing.path = path
+            
+            do {
+                project.addToDrawings(drawing)
+                try CoreDataHelper.context.save()
+            } catch {
+                print(error)
+            }
         }
     }
 }
 
 extension Drawings {
-    var image: UIImage {
-        return UIImage(data: self.data! )!
+    var image: UIImage? {
+        if let path = self.path {
+            return UIImage.loadImageFromDiskWith(fileName: path)
+        }
+        return nil
     }
 }

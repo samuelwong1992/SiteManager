@@ -180,3 +180,28 @@ extension UIViewController {
         }
     }
 }
+
+protocol ScrollViewTextFieldHandler {
+    var scrollableView: UIScrollView { get }
+    func addSVTFKeyboardListeners()
+}
+
+extension ScrollViewTextFieldHandler where Self: UIViewController {
+    func addSVTFKeyboardListeners() {
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { notification in
+            guard let userInfo = notification.userInfo else { return }
+            var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+            keyboardFrame = self.scrollableView.convert(keyboardFrame, from: nil)
+
+            var contentInset:UIEdgeInsets = self.scrollableView.contentInset
+            contentInset.bottom = keyboardFrame.size.height + 20
+            self.scrollableView.contentInset = contentInset
+        }
+        
+        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) { notification in
+            let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+            self.scrollableView.contentInset = contentInset
+
+        }
+    }
+}

@@ -462,7 +462,7 @@ extension SiteInspectionViewController {
             let alert = UIAlertController(title: "Related To", message: "Which Marker is this Marker tied to?", preferredStyle: .alert)
             
             for sio in self.siteInpsection.siteInspectionObjectsArray {
-                if sio.link == nil {
+                if sio.link == nil && !String.isNilOrEmpty(sio.text) {
                     alert.addAction(UIAlertAction(title: sio.text, style: .default, handler: { action in
                         let siteInspectionObjectContainer = SiteInspectionObjectHelpers.createSiteInspectionObject(forSiteInspection: self.siteInpsection, withLinkToSiteInspecionObject: sio, siObjectType: self.currentInspectMode.inspectionObjectType!, colour: self.selectedColour.hexCode, coords: coords)
                         

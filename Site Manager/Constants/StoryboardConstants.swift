@@ -31,6 +31,7 @@ struct StoryboardConstants {
         case Projects = "Projects"
         case Settings = "Settings"
         case Project = "Project"
+        case Profile = "Profile"
         case SiteInspectionStoryboard = "SiteInspection"
         
         var storyboard: UIStoryboard {

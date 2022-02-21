@@ -2,7 +2,7 @@
 //  SiteInspectionObjectCoordinate+CoreDataProperties.swift
 //  Site Manager
 //
-//  Created by Samuel Wong on 10/12/21.
+//  Created by Samuel Wong on 10/2/2022.
 //
 //
 
@@ -16,9 +16,9 @@ extension SiteInspectionObjectCoordinate {
         return NSFetchRequest<SiteInspectionObjectCoordinate>(entityName: "SiteInspectionObjectCoordinate")
     }
 
+    @NSManaged public var index: Int16
     @NSManaged public var x: Double
     @NSManaged public var y: Double
-    @NSManaged public var index: Int16
     @NSManaged public var siteInspectionObject: SiteInspectionObject?
 
 }

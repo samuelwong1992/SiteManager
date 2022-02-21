@@ -19,6 +19,17 @@ class MainTabBarController: UITabBarController {
         initialize()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if ProfileHelpers.profile == nil {
+            if let vc = ProfileViewController.viewController {
+                vc.isModalInPresentation = true
+                self.present(vc, animated: true, completion: nil)
+            }
+        }
+    }
+    
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         

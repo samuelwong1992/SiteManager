@@ -2,7 +2,7 @@
 //  SiteInspection+CoreDataProperties.swift
 //  Site Manager
 //
-//  Created by Samuel Wong on 10/12/21.
+//  Created by Samuel Wong on 10/2/2022.
 //
 //
 
@@ -17,17 +17,17 @@ extension SiteInspection {
     }
 
     @NSManaged public var attention: String?
+    @NSManaged public var company: String?
     @NSManaged public var date: Date?
     @NSManaged public var introduction: String?
     @NSManaged public var name: String?
-    @NSManaged public var presentOnSite: String?
     @NSManaged public var subject: String?
-    @NSManaged public var weatherConditions: String?
-    @NSManaged public var whs: String?
     @NSManaged public var workInProgress: String?
+    @NSManaged public var introductionPhotoPath: String?
+    @NSManaged public var issuedBy: String?
+    @NSManaged public var drawing: Drawings?
     @NSManaged public var project: Project?
     @NSManaged public var siteInspectionObjects: NSSet?
-    @NSManaged public var drawing: Drawings?
 
 }
 

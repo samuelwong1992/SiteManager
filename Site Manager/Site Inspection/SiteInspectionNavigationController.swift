@@ -36,9 +36,16 @@ class SiteInspectionNavigationController: MainNavigationController {
 //MARK: Button Handlers
 @objc extension SiteInspectionNavigationController {
     func secondaryButton_didPress() {
-        if let vc = SiteInspectionFinalizationViewController.viewController {
-            vc.siteInspection = siteInspection
-            self.present(vc, animated: true, completion: nil)
+        if let pvc = self.visibleViewController as? SiteInspectionViewController {
+            if let vc = SiteInspectionFinalizationViewController.viewController {
+                vc.siteInspection = siteInspection
+                let renderer = UIGraphicsImageRenderer(bounds: pvc.imageView.bounds)
+                let image = renderer.image { rendererContext in
+                    pvc.imageView.layer.render(in: rendererContext.cgContext)
+                }
+                vc.siteInspectionImages = [image]
+                self.present(vc, animated: true, completion: nil)
+            }
         }
     }
 }

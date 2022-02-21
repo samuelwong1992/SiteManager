@@ -20,18 +20,21 @@ struct SiteInspectionHelpers {
     }
     
     @discardableResult
-    static func createSiteInspection(withName name: String, withDrawing drawing: Drawings, forProject project: Project, introduction: String, presentOnSite: String, weatherConditions: String, workInProgress: String, attention: String, subject: String) -> (siteInspection: SiteInspection?, error: Error?) {
+    static func createSiteInspection(withName name: String, withDrawing drawing: Drawings, forProject project: Project, company: String, introduction: String, introductionPhoto: UIImage?, workInProgress: String, attention: String, subject: String) -> (siteInspection: SiteInspection?, error: Error?) {
         let siteInspection = SiteInspection(context: CoreDataHelper.context)
         siteInspection.name = name
         siteInspection.drawing = drawing
+        siteInspection.company = company
         siteInspection.introduction = introduction
-        siteInspection.presentOnSite = presentOnSite
-        siteInspection.weatherConditions = weatherConditions
         siteInspection.workInProgress = workInProgress
         siteInspection.attention = attention
         siteInspection.subject = subject
         siteInspection.project = project
         siteInspection.date = Date()
+        
+        if let introductionPhoto = introductionPhoto {
+            siteInspection.introductionPhotoPath = introductionPhoto.saveImageToFileManager()
+        }
 
         do {
             try CoreDataHelper.context.save()
@@ -50,5 +53,12 @@ extension SiteInspection {
         }
         
         return []
+    }
+    
+    var introductionPhoto: UIImage? {
+        if let path = self.introductionPhotoPath {
+            return UIImage.loadImageFromDiskWith(fileName: path)
+        }
+        return nil
     }
 }

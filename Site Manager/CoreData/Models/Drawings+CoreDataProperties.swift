@@ -2,7 +2,7 @@
 //  Drawings+CoreDataProperties.swift
 //  Site Manager
 //
-//  Created by Samuel Wong on 10/12/21.
+//  Created by Samuel Wong on 10/2/2022.
 //
 //
 
@@ -16,7 +16,7 @@ extension Drawings {
         return NSFetchRequest<Drawings>(entityName: "Drawings")
     }
 
-    @NSManaged public var data: Data?
+    @NSManaged public var path: String?
     @NSManaged public var project: Project?
     @NSManaged public var siteInspection: NSSet?
 
